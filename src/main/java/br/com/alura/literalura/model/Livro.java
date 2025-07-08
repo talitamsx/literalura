@@ -16,6 +16,16 @@ public class Livro {
     private String idioma;
     private Integer quantidadeDownload;
 
+    public Livro(String titulo, String autor, String sinopse, String idioma, Integer quantidadeDownload) {
+        this.titulo = titulo;
+        this.autor = autor;
+        this.sinopse = sinopse;
+        this.idioma = idioma;
+        this.quantidadeDownload = quantidadeDownload;
+    }
+
+    public Livro(){}
+
     public Integer getQuantidadeDownload() {
         return quantidadeDownload;
     }

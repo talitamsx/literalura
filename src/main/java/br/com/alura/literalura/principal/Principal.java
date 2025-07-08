@@ -4,6 +4,7 @@ import br.com.alura.literalura.model.DadosResults;
 import br.com.alura.literalura.model.Livro;
 import br.com.alura.literalura.repository.LivroRepository;
 import br.com.alura.literalura.service.ConsumoApi;
+import br.com.alura.literalura.service.ConversorDeLivro;
 import br.com.alura.literalura.service.ConverteDados;
 
 import java.net.URLEncoder;
@@ -73,38 +74,36 @@ public class Principal {
 
             DadosResults resposta = conversor.obterDados(json, DadosResults.class);
 
-//            if (resposta.results().isEmpty()) {
-//                System.out.println("Livro não encontrado.");
-//                return;
-//            }
-
-            var dadosDoLivroAPI = resposta.results().stream()
+                  var dadosDoLivroAPI = resposta.results().stream()
                     .filter(d -> d.titulo().equalsIgnoreCase(nomeLivro))
                     .findFirst();
 
             if (dadosDoLivroAPI.isEmpty()) {
-                System.out.println("Livro não encontrado.");
+                System.out.println("Livro não encontrado. \n");
                 return;
             }
 
          var dados = dadosDoLivroAPI.get();
 
-            var livroExistente = repositorio.findByTitulo(dados.titulo());
-            if (livroExistente.isPresent()) {
+            List<Livro> livros = repositorio.findByTitulo(dados.titulo());
+            if (!livros.isEmpty()) {
                 System.out.println("Livro localizado: ");
-                exibirLivro(livroExistente.get());
+                livros.forEach(this::exibirLivro);
                 return;
             }
 
-            Livro livro = new Livro();
-            livro.setTitulo(dados.titulo());
-            livro.setAutor(dados.authors().isEmpty() ? "Autor desconhecido" : dados.authors().get(0).nome());
-            livro.setSinopse(dados.summaries().isEmpty() ? "Sem sinopse disponível" : dados.summaries().get(0));
-            livro.setIdioma(dados.languages().isEmpty() ? "Desconhecido" : dados.languages().get(0));
-            livro.setQuantidadeDownload(dados.quantidadeDownload());
+            Livro livro = ConversorDeLivro.converteLivro(dados);
+//
+//
+//            Livro livro = new Livro();
+//            livro.setTitulo(dados.titulo());
+//            livro.setAutor(dados.authors().isEmpty() ? "Autor desconhecido" : dados.authors().get(0).nome());
+//            livro.setSinopse(dados.summaries().isEmpty() ? "Sem sinopse disponível" : dados.summaries().get(0));
+//            livro.setIdioma(dados.languages().isEmpty() ? "Desconhecido" : dados.languages().get(0));
+//            livro.setQuantidadeDownload(dados.quantidadeDownload());
 
             repositorio.save(livro);
-            System.out.println("Livro localizado e salvo com sucesso:");
+            System.out.println("Livro localizado e salvo com sucesso: \n");
             exibirLivro(livro);
 
         } catch (Exception e) {
@@ -114,11 +113,12 @@ public class Principal {
     }
 
     private void exibirLivro(Livro livro) {
+
         System.out.println("Livro: " + livro.getTitulo());
         System.out.println("Autor: " + livro.getAutor());
         System.out.println("Sinopse: " + livro.getSinopse());
         System.out.println("Idioma: " + livro.getIdioma());
-        System.out.println("Número de downloads: " + livro.getQuantidadeDownload());
+        System.out.println("Número de downloads: " + livro.getQuantidadeDownload() + "\n");
     }
 
     public void listarLivrosRegistrados() {
