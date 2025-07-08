@@ -8,7 +8,6 @@ import br.com.alura.literalura.service.ConverteDados;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -28,7 +27,7 @@ public class Principal {
         while (opcao != 0) {
             var menu = """
                     
-                    *** CATALAGO DE LIROS ***
+                    *** CATÁLOGOS DE LIROS ***
                     1 - Buscar livro por título
                     2 - Listar livros registrados
                     3 - Listar autores registrados
@@ -46,11 +45,21 @@ public class Principal {
             switch (opcao) {
                 case 1:
                     buscarLivroPorTitulo();
+                    break;
+                case 2:
+                    listarLivrosRegistrados();
+                    break;
+                case 0:
+                    System.out.println("Saindo...");
+                    break;
+                default:
+                    System.out.println("Opção inválida");
             }
         }
     }
 
     private void buscarLivroPorTitulo() {
+
         try {
             System.out.println("Digite o nome do livro: ");
             var nomeLivro = leitura.nextLine();
@@ -64,13 +73,30 @@ public class Principal {
 
             DadosResults resposta = conversor.obterDados(json, DadosResults.class);
 
-            if (resposta.results().isEmpty()) {
+//            if (resposta.results().isEmpty()) {
+//                System.out.println("Livro não encontrado.");
+//                return;
+//            }
+
+            var dadosDoLivroAPI = resposta.results().stream()
+                    .filter(d -> d.titulo().equalsIgnoreCase(nomeLivro))
+                    .findFirst();
+
+            if (dadosDoLivroAPI.isEmpty()) {
                 System.out.println("Livro não encontrado.");
                 return;
             }
-            var dados = resposta.results().get(0);
-            Livro livro = new Livro();
 
+         var dados = dadosDoLivroAPI.get();
+
+            var livroExistente = repositorio.findByTitulo(dados.titulo());
+            if (livroExistente.isPresent()) {
+                System.out.println("Livro localizado: ");
+                exibirLivro(livroExistente.get());
+                return;
+            }
+
+            Livro livro = new Livro();
             livro.setTitulo(dados.titulo());
             livro.setAutor(dados.authors().isEmpty() ? "Autor desconhecido" : dados.authors().get(0).nome());
             livro.setSinopse(dados.summaries().isEmpty() ? "Sem sinopse disponível" : dados.summaries().get(0));
@@ -78,10 +104,33 @@ public class Principal {
             livro.setQuantidadeDownload(dados.quantidadeDownload());
 
             repositorio.save(livro);
-            System.out.println("Livro salvo: " + livro);
+            System.out.println("Livro localizado e salvo com sucesso:");
+            exibirLivro(livro);
+
         } catch (Exception e) {
-            System.out.println(" Ocorreu um erro ao buscar o livro: " + e.getMessage());
+            System.out.println("Erro ao buscar ou processar livro:: " + e.getMessage());
             e.printStackTrace();
+        }
+    }
+
+    private void exibirLivro(Livro livro) {
+        System.out.println("Livro: " + livro.getTitulo());
+        System.out.println("Autor: " + livro.getAutor());
+        System.out.println("Sinopse: " + livro.getSinopse());
+        System.out.println("Idioma: " + livro.getIdioma());
+        System.out.println("Número de downloads: " + livro.getQuantidadeDownload());
+    }
+
+    public void listarLivrosRegistrados() {
+        List<Livro> livros = repositorio.findAll();
+        if (livros.isEmpty()) {
+            System.out.println("Nenhum livro cadastrado.");
+        } else {
+            System.out.println("=== LIVROS REGISTRADOS ===");
+            livros.forEach(livro -> {
+                exibirLivro(livro);
+                System.out.println("--------------------------");
+            });
         }
     }
 }
