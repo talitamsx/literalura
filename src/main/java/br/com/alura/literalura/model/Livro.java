@@ -9,14 +9,17 @@ public class Livro {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String titulo;
-    private String autor;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    private Autor autor;
 
     @Column(columnDefinition = "TEXT")
     private String sinopse;
     private String idioma;
     private Integer quantidadeDownload;
 
-    public Livro(String titulo, String autor, String sinopse, String idioma, Integer quantidadeDownload) {
+
+    public Livro(String titulo, Autor autor, String sinopse, String idioma, Integer quantidadeDownload) {
         this.titulo = titulo;
         this.autor = autor;
         this.sinopse = sinopse;
@@ -58,11 +61,11 @@ public class Livro {
         this.titulo = titulo;
     }
 
-    public String getAutor() {
+    public Autor getAutor() {
         return autor;
     }
 
-    public void setAutor(String autor) {
+    public void setAutor(Autor autor) {
         this.autor = autor;
     }
 
