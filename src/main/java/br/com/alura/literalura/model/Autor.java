@@ -60,24 +60,23 @@ public class Autor {
     }
 
 
-    // --- ESSENCIAL: Sobrescrever equals() e hashCode() para que distinct() funcione corretamente ---
+    // Verifica se o autor atual é igual a outro autor, considerando o nome
+    //quals() compara se dois objetos Autor são considerados iguais evitando duplicidade
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Autor autor = (Autor) o;
-        // Consideramos dois autores iguais se tiverem o mesmo nome.
-        // Se houver um ID de API externa, seria melhor usar o ID.
+    public boolean equals(Object a) {
+        if (this == a) return true;
+        if (a == null || getClass() != a.getClass()) return false;
+        Autor autor = (Autor) a;
         return Objects.equals(nome, autor.nome);
     }
 
+    // hashCode() método que gera um número inteiro (int) a partir dos dados de um objeto.
+    // Serve para otimizar buscas e comparações em coleções ou ao usar .distinct() em streams.
+    // Se dois autores são iguais pelo equals(), obrigatoriamente precisam ter o mesmo hashCode.
     @Override
     public int hashCode() {
-        // Gera o hash baseado no nome.
         return Objects.hash(nome);
     }
-
-
 
     @Override
     public String toString() {

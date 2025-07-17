@@ -10,8 +10,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class LiteraluraApplication implements CommandLineRunner {
 	@Autowired
-private LivroRepository repositorio;
-
+	private LivroRepository repositorio;
 
 	public static void main(String[] args) {
 

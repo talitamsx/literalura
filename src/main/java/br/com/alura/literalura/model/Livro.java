@@ -10,6 +10,8 @@ public class Livro {
     private Long id;
     private String titulo;
 
+    // Relacionamento muitos para um com Autor
+    // Muitos livros podem ter o mesmo autor
     @ManyToOne(cascade = CascadeType.ALL)
     private Autor autor;
 

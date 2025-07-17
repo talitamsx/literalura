@@ -64,13 +64,15 @@ public class Principal {
                     break;
                 case 0:
                     System.out.println("Saindo...");
-                    break;
+                    System.exit(0);
                 default:
                     System.out.println("Opção inválida");
             }
         }
     }
 
+    // Verifica se o livro já existe no banco antes de cadastrar.
+    // Se existir, exibe informações. Se não existir, consome da API, converte e salva.
     private void buscarLivroPorTitulo() {
 
         try {
@@ -118,7 +120,6 @@ public class Principal {
 
         System.out.println("Livro: " + livro.getTitulo());
         System.out.println("Autor: " + livro.getAutor().getNome());
-        System.out.println("Sinopse: " + livro.getSinopse());
         System.out.println("Idioma: " + livro.getIdioma());
         System.out.println("Número de downloads: " + livro.getQuantidadeDownload() + "\n");
     }
@@ -136,6 +137,9 @@ public class Principal {
         }
     }
 
+    // Lista autores no banco junto com suas datas (nascimento e falcimento) e livros cadastrados
+    // Utiliza stream para filtrar e agrupar livros por autor
+
     public void buscarAutoresRegistrados() {
         List<Livro> livros = repositorio.findAll();
 
@@ -144,7 +148,6 @@ public class Principal {
             return;
         }
 
-        // Filtra nulos ANTES de mapear e aplicar distinct
         var listaAutores = livros.stream()
                 .map(Livro::getAutor) // Pega o objeto Autor de cada livro
                 .filter(Objects::nonNull) // REMOVE quaisquer autores que sejam null
@@ -193,7 +196,7 @@ public class Principal {
         // 1. Pega todos os autores dos livros
         // 2. Filtra autores que são null
         // 3. Garante que cada autor apareça apenas uma vez
-        // 4. Filtra os autores que estavam vivos no 'anoBusca'
+        // 4. Filtra os autores que estavam vivos no anoBusca
         List<Autor> autoresVivosNoAno = livros.stream()
                 .map(Livro::getAutor)
                 .filter(Objects::nonNull) // Remove autores nulos
@@ -211,7 +214,7 @@ public class Principal {
                 })
                 .collect(Collectors.toList());
 
-        // Verificação final para exibir a mensagem correta
+        // Verificação para exibir a mensagem correta
         if (autoresVivosNoAno.isEmpty()) {
             System.out.println("Não foi localizado autores vivos nessa data (" + anoBusca + ").");
         } else {
@@ -222,7 +225,7 @@ public class Principal {
                 System.out.println("Nascimento: " + (autor.getDataNascimento() != null ? autor.getDataNascimento() : "Desconhecido"));
                 System.out.println("Falecimento: " + (autor.getDataFalecimento() != null ? autor.getDataFalecimento() : "Vivo / Desconhecido"));
 
-                // --- Parte para listar os livros do autor ---
+                //Listar livros do autor
                 // Pega todos os livros e filtra aqueles que pertencem ao autor
                 List<Livro> livrosDesteAutor = livros.stream()
                         .filter(l -> l.getAutor() != null && l.getAutor().equals(autor)) // Garante que o autor do livro não é null e compara
@@ -246,7 +249,7 @@ public class Principal {
         String idioma = leitura.nextLine().trim().toLowerCase();
 
         if (idioma.isBlank()){
-            System.out.println("Idioma inválido! Escolha uma idioma entre as opções do menu");
+            System.out.println("Opção inválida! Tente novamente");
             return;
         }
 
@@ -255,11 +258,10 @@ public class Principal {
                 .collect(Collectors.toList());
 
         if(livrosFiltrados.isEmpty()) {
-            System.out.println("Não existe livros nesse idioma no banco de dados");
+            System.out.println("Não existe livros com esse idioma no banco de dados");
         } else {
             System.out.println("\n *** LIVROS " + idioma + " ***");
             livrosFiltrados.forEach(this::exibirLivro);
         }
-
     }
 }
