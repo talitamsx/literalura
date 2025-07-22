@@ -42,11 +42,11 @@ A aplicação é executada via terminal (linha de comando) e permite:
 
 Ao iniciar a aplicação é apresentado o menu com as opções:
 
-1 - Buscar livro por título
-2 - Listar livros registrados
-3 - Listar autores registrados
-4 - Listar autores vivos em determinado ano
-5 - Listar livros em um determinado idioma
+- 1 - Buscar livro por título
+- 2 - Listar livros registrados
+- 3 - Listar autores registrados
+- 4 - Listar autores vivos em determinado ano
+- 5 - Listar livros em um determinado idioma
 
 ### Opção 1 - Buscar livro por título
 É solicitado que o usuário digite o nome do livro:
