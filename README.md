@@ -4,7 +4,7 @@ Projeto desenvolvido durante o curso de Desenvolvimento Back-end em Java, uma in
 
 O projeto tem como objetivo consumir dados da API [Gutendex](https://gutendex.com/), que reúne obras literárias, permitindo ao usuário buscar livros e autores, armazenar esses dados em banco de dados e realizar consultas posteriormente.
 
-##  Tecnologias Utilizadas
+## Tecnologias Utilizadas
 
 - Java 17
 - Spring Boot
@@ -16,7 +16,7 @@ O projeto tem como objetivo consumir dados da API [Gutendex](https://gutendex.co
 
 ---
 
-## 🎯 Funcionalidades
+## Funcionalidades
 
 A aplicação é executada via terminal (linha de comando) e permite:
 
@@ -28,7 +28,7 @@ A aplicação é executada via terminal (linha de comando) e permite:
 
 ---
 
-## 🗃️ Estrutura do Projeto
+## Estrutura do Projeto
 
 - `model/`: contém as entidades `Livro` e `Autor`, além dos DTOs para conversão dos dados da API.
 - `service/`: classes de consumo de API e conversão dos dados para entidades.
