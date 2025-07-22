@@ -93,9 +93,5 @@ Ao escolher a opção 5 é apresentado um novo menu para que o usuário escolha 
 
 ---
 
-## 📄 Licença
-
-Projeto desenvolvido para fins educacionais — todos os direitos reservados a Alura e Oracle Next Education.
-
 
 
